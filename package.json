@@ -9,9 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nomiclabs/hardhat-web3": "^2.0.0",
+    "@openzeppelin/contracts": "^4.6.0",
+    "@openzeppelin/test-helpers": "^0.5.15",
     "next": "12.1.6",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "web3": "^1.7.3"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",

@@ -1,29 +1,44 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// When running the script with `npx hardhat run <script>` you'll find the Hardhat
-// Runtime Environment's members available in the global scope.
-const hre = require("hardhat");
+const { web3, ethers } = require("hardhat");
+const cheapATokenObject = require('../artifacts/contracts/CheapAToken.sol/CheapAToken.json');
+const bulkSenderObject = require('../artifacts/contracts/BulkSender.sol/BulkSender.json');
 
 async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
+  const cheapATokenAddress = '0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0';
+  const cheapATokenAbi = cheapATokenObject.abi;
+  const cheapATokenContract = new web3.eth.Contract(cheapATokenAbi, cheapATokenAddress);
+  await cheapATokenContract.methods.isOperatorFor('0x610178dA211FEF7D417bC0e6FeD39F05609AD788', '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266').call()
+  .then(console.log)
 
-  // We get the contract to deploy
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  const bulkSenderAddress = '0x610178dA211FEF7D417bC0e6FeD39F05609AD788';
+  const bulkSenderAbi = bulkSenderObject.abi;
+  const bulkSenderContract = new web3.eth.Contract(bulkSenderAbi, bulkSenderAddress);
+  console.log(bulkSenderContract);
 
-  await greeter.deployed();
+  let recipientAddresses = await ethers.getSigners();
+  recipientAddresses.shift();
+  recipientAddresses = recipientAddresses.map(x => x.address);
+  console.log(recipientAddresses);
+  
+  let sum = 0;
 
-  console.log("Greeter deployed to:", greeter.address);
+  await cheapATokenContract.methods.balanceOf("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266").call()
+  .then(console.log);
+
+  for(const address of recipientAddresses) {
+    await cheapATokenContract.methods.balanceOf(address).call()
+    .then(console.log);
+  }
+
+  /*await bulkSenderContract.methods.send(cheapATokenAddress, recipientAddresses, '1', []).send({from: "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"})
+    .then(console.log)*/
+
+  for(const address of recipientAddresses) {
+    await cheapATokenContract.methods.balanceOf(address).call()
+    .then(console.log);
+  }
+
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main()
   .then(() => process.exit(0))
   .catch((error) => {
