@@ -1,8 +1,15 @@
 const { web3, ethers } = require("hardhat");
 const cheapATokenObject = require('../artifacts/contracts/CheapAToken.sol/CheapAToken.json');
 const bulkSenderObject = require('../artifacts/contracts/BulkSender.sol/BulkSender.json');
+const { singletons } = require("@openzeppelin/test-helpers");
 
 async function main() {
+
+  let signers = await ethers.getSigners();
+  let accounts = signers.map(x => x.address);
+
+  this.erc1820 = await singletons.ERC1820Registry(accounts[0]);
+
   const cheapATokenAddress = '0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0';
   const cheapATokenAbi = cheapATokenObject.abi;
   const cheapATokenContract = new web3.eth.Contract(cheapATokenAbi, cheapATokenAddress);

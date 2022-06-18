@@ -1,8 +1,15 @@
 const hre = require("hardhat");
+const { singletons } = require("@openzeppelin/test-helpers");
 
 async function main() {
+
+    let signers = await ethers.getSigners();
+    let accounts = signers.map(x => x.address); 
+    
     let initialSupply = 1000;
-    let defaultOperators = ['0x610178dA211FEF7D417bC0e6FeD39F05609AD788', '0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e'];
+    let defaultOperators = [];
+
+    this.erc1820 = await singletons.ERC1820Registry(accounts[0]);
 
     const CheapAToken = await hre.ethers.getContractFactory("CheapAToken");
     const token = await CheapAToken.deploy(initialSupply, defaultOperators);
