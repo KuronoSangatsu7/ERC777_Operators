@@ -84,7 +84,7 @@ describe("FixedPriceSeller", function () {
     it("can be revoked", async function() {
         await token.revokeOperator(fixedPriceSeller.address);
         let isOperator = await token.isOperatorFor(fixedPriceSeller.address, accounts[0]);
-        await expect(isOperator).to.be.false;
+        expect(isOperator).to.be.false;
     });
 
     it("does not sell after being revoked", async function() {
