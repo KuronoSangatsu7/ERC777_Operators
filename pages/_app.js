@@ -1,6 +1,15 @@
+import "bulma/css/bulma.min.css";
+import "../styles/globals.css";
+import "./airdrop.css";
+import NavBar from "../components/NavBar";
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return (
+    <>
+      <NavBar />
+      <Component {...pageProps} className="all-pages"/>
+    </>
+  );
 }
 
-export default MyApp
+export default MyApp;
