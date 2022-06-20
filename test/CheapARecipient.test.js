@@ -23,7 +23,7 @@ describe("CheapARecipient", function () {
         await token.deployed();
     });
 
-    it('receives to an externally owned account', async function () {
+    it('receives from an externally owned account', async function () {
         const tokensRecipientInterfaceHash = await recipient.TOKENS_RECIPIENT_INTERFACE_HASH();
 
         await recipient.recipientFor(accounts[1]);
