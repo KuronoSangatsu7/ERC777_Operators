@@ -24,7 +24,7 @@ describe("BulkSender", function () {
         await token.deployed();
     });
 
-    it("initializes successfully", async function() {
+    it("initializes successfully", async function () {
         expect(bulkSender.address).to.be.properAddress;
         expect(token.address).to.be.properAddress;
         const [bulkSendOperator] = await token.defaultOperators();
