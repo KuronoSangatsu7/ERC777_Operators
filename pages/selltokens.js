@@ -73,7 +73,6 @@ export default function SellTokens() {
             <p className="modal-card-title">List CATs</p>
             <button
               className="delete"
-              aria-label="close"
               onClick={() => setShowModal(false)}
             ></button>
           </header>
