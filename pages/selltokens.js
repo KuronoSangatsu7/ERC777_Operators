@@ -25,25 +25,25 @@ export default function SellTokens() {
                 <div key={i} className="box">
                   <div className="field columns is-multiline">
                     <div className="field column is-three-quarters">
-                      <label className="label">Address: </label>
+                      <label className="label is-size-5">Address: </label>
                       <div className="control">Someone's Address</div>
                     </div>
                     <div className="field column is-one-quarter">
-                      <label className="label">Amount: </label>
+                      <label className="label is-size-5">Amount: </label>
                       <div className="control">
                         <div>Someone's amount of tokens</div>
                       </div>
                     </div>
 
                     <div className="field column is-3">
-                      <label className="label">Price:</label>
+                      <label className="label is-size-5">Price:</label>
                       <div className="control">
                         Someone's price for the token
                       </div>
                     </div>
 
                     <div className="field column is-offset-6">
-                      <button className="control button is-dark is-medium ml-5 mt-5" onClick={showMe}>
+                      <button className="control button is-primary is-medium is-fullwidth" onClick={showMe}>
                         Buy
                       </button>
                     </div>
