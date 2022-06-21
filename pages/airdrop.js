@@ -65,9 +65,8 @@ export default function AirDrop() {
               </div>
             </div>
             {addresses.map((address, i) => (
-              <div className="field" key={i}>
-                <div>
-                  <div className="is-flex-direction-row">
+              <div className="field columns" key={i}>
+                  <div className="field column is-10">
                     <label className="label">Address {i + 1}: </label>
                     <div className="control">
                       <input
@@ -78,11 +77,12 @@ export default function AirDrop() {
                       ></input>
                     </div>
                   </div>
-                  <label className="label">Amount {i + 1}: </label>
+                  <div className="field column">
+                  <label className="label">Amount: </label>
                   <div className="control">
                     <input
                       className="input"
-                      type="text"
+                      type="number"
                       value={
                         sameAmount
                           ? sameAmountVal
@@ -93,7 +93,7 @@ export default function AirDrop() {
                       onChange={sameAmount? e => setSingleAmountval(parseInt(e.target.value)): handleUserAmountChange(i)}
                     ></input>
                   </div>
-                </div>
+                  </div>
               </div>
             ))}
             <div className="field is-grouped-centered">
