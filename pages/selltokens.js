@@ -19,10 +19,10 @@ export default function SellTokens() {
     <>
       <div className="columns is-centered">
         <div className="column is-three-quarters is-centered">
-          <div className="box">
+          <div className="">
             <fieldset>
               {listings.map((listing, i) => (
-                <div key={i} className="">
+                <div key={i} className="box">
                   <div className="field columns is-multiline">
                     <div className="field column is-three-quarters">
                       <label className="label">Address: </label>
