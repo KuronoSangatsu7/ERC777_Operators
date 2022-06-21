@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function SellTokens() {
-  const [numOfListings, setNumOfListings] = useState(5);
+  const [numOfListings, setNumOfListings] = useState(3);
   const [listings, setListings] = useState([]);
 
   useEffect(() => {
@@ -51,6 +51,7 @@ export default function SellTokens() {
                 </div>
               ))}
             </fieldset>
+            <button className="control button is-link is-large is-fullwidth mt-5"> List your CAT's </button>
           </div>
         </div>
       </div>

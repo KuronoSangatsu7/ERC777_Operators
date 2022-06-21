@@ -96,9 +96,9 @@ export default function AirDrop() {
                   </div>
               </div>
             ))}
-            <div className="field is-grouped-centered">
+            <div className="field">
               <div className="control">
-                <button className="button is-danger" onClick={() => showMe()}>
+                <button className="button is-danger is-fullwidth is-medium" onClick={() => showMe()}>
                   Send Tokens
                 </button>
               </div>
