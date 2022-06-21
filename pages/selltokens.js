@@ -81,16 +81,26 @@ export default function SellTokens() {
               Put your <strong className="is-italic">CheapATokens</strong> up
               for sale for a static price.
             </div>
-            <label className="label mt-4 is-size-5">
-              Price:
-            </label>
+            <label className="label mt-4 is-size-5">Price:</label>
             <div className="columns mt-2 ml-2">
-            <input className="input column is-5 mt-4" value={listedPrice} onChange={(e) => setListedPrice(e.target.value)}></input>
-            <div className="label column is-size-3"> ETH </div>
+              <input
+                className="input column is-5 mt-4"
+                value={listedPrice}
+                onChange={(e) => setListedPrice(e.target.value)}
+              ></input>
+              <div className="label column is-size-3"> ETH </div>
             </div>
           </section>
           <footer className="modal-card-foot">
-            <button className="button is-dark" onClick={() => {showMe(); setShowModal(false)}}>List Tokens</button>
+            <button
+              className="button is-dark"
+              onClick={() => {
+                showMe();
+                setShowModal(false);
+              }}
+            >
+              List Tokens
+            </button>
             <button className="button" onClick={() => setShowModal(false)}>
               Cancel
             </button>
