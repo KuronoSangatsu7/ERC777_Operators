@@ -10,6 +10,13 @@ contract FixedPriceSeller {
     // Mapping is token=>holder=>price per token
     mapping(address=>mapping(address=>uint256)) pricePerToken;
 
+    // Keeping track of the number of current sellers
+    uint public totalNumOfSellers;
+
+    // Mappings to keep track of sellers
+    mapping(address=>bool) isSeller;
+    mapping(uint=>address) lutSellers;
+
     event PricePerToken(address token, address holder, uint256 pricePerToken);
 
     /**
@@ -17,8 +24,24 @@ contract FixedPriceSeller {
      * the price is 1 Ether for 1 token then _pricePerToken would be 10^18.
      */
     function setPricePerToken(IERC777 _token, uint256 _pricePerToken) public {
+        require(_pricePerToken >= 0, "Price can't be negative");
         pricePerToken[address(_token)][msg.sender] = _pricePerToken;
         emit PricePerToken(address(_token), msg.sender, _pricePerToken);
+
+        address seller = msg.sender;
+        
+        if(_pricePerToken > 0) {
+
+            if(!isSeller[seller]) {
+
+                isSeller[seller] = true;
+                uint index = totalNumOfSellers++;
+                lutSellers[index] = seller;
+
+            }
+
+        }
+
     }
 
     /**
@@ -57,5 +80,20 @@ contract FixedPriceSeller {
      */
     function postSend(address payable _holder) internal {
         _holder.transfer(msg.value);
+    }
+
+
+    /**
+     * Returns a list of current sellers of a specific token
+     */
+    function getCurrentSellers(IERC777 _token) external view returns (address [] memory) {
+        address[] memory _currentSellers = new address[](totalNumOfSellers);
+        
+        for(uint i = 0; i < totalNumOfSellers; i++) {
+            if(pricePerToken[address(_token)][lutSellers[i]] > 0)
+                _currentSellers[i] = lutSellers[i];
+        }
+
+        return _currentSellers;
     }
 }

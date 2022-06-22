@@ -95,4 +95,35 @@ describe("FixedPriceSeller", function () {
         await expect(fixedPriceSeller.connect(signers[1]).send(token.address, accounts[0], {value: value})).to.be.reverted;
     });
 
+    it("does not allow a negative price per token", async function() {
+        await expect(fixedPriceSeller.setPricePerToken(token.address, ethers.utils.parseUnits("-1"))).to.be.reverted;
+    });
+
+    it("returns the list of current sellers of a token", async function () {
+        await fixedPriceSeller.setPricePerToken(token.address, ethers.utils.parseUnits("1"));
+        await fixedPriceSeller.connect(signers[1]).setPricePerToken(token.address, ethers.utils.parseUnits("2"));
+        await fixedPriceSeller.connect(signers[2]).setPricePerToken(token.address, ethers.utils.parseUnits("3"));
+        await fixedPriceSeller.connect(signers[3]).setPricePerToken(token.address, ethers.utils.parseUnits("0"));
+
+        let currentSellersContract = await fixedPriceSeller.getCurrentSellers(token.address);
+        let currentSellersManual = [accounts[0], accounts[1], accounts[2]];
+
+        //deep equality
+        expect(currentSellersContract).to.eql(currentSellersManual);
+    });
+
+    it("does not return sellers who change the price per token to 0", async function () {
+        await fixedPriceSeller.setPricePerToken(token.address, ethers.utils.parseUnits("1"));
+        await fixedPriceSeller.connect(signers[1]).setPricePerToken(token.address, ethers.utils.parseUnits("2"));
+        await fixedPriceSeller.connect(signers[2]).setPricePerToken(token.address, ethers.utils.parseUnits("3"));
+        await fixedPriceSeller.connect(signers[2]).setPricePerToken(token.address, ethers.utils.parseUnits("0"));
+
+        let currentSellersManual = [accounts[0], accounts[1]];
+        let currentSellersContract = await fixedPriceSeller.getCurrentSellers(token.address);
+        
+        currentSellersContract = currentSellersContract.filter(address => address != ethers.constants.AddressZero);
+
+        expect(currentSellersManual).to.eql(currentSellersContract);
+    });
+
 });
