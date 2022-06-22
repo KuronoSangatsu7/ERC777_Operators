@@ -1,19 +1,20 @@
 const hre = require("hardhat");
 
 async function main() {
-    const CheapASender = await hre.ethers.getContractFactory("CheapASender");
-    const tokenSender = await CheapASender.deploy();
 
-    await tokenSender.deployed();
+  const CheapASender = await ethers.getContractFactory("CheapASender");
+  const sender = await CheapASender.deploy();
 
-    console.log("Sender has been deployed to address: ", tokenSender.address);
+  await sender.deployed();
 
-    const CheapARecipient = await hre.ethers.getContractFactory("CheapARecipient");
-    const tokenRecipient = await CheapARecipient.deploy('0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0');
+  console.log("Sender has been deployed to address: ", sender.address);
 
-    await tokenRecipient.deployed();
+  const CheapARecipient = await ethers.getContractFactory("CheapARecipient");
+  const recipient = await CheapARecipient.deploy();
+  
+  await recipient.deployed();
 
-    console.log("Recipient has been deployed to address: ", tokenRecipient.address);
+  console.log("Recipient has been deployed to address: ", recipient.address);
 
 }
 
