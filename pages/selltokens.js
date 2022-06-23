@@ -1,17 +1,71 @@
 import { useEffect, useState } from "react";
+import { useWallet, WalletContextProvider } from "../components/wallet-context";
+import { ethers } from "ethers";
+import abi from "../utils/contracts/FixedPriceSeller.sol/FixedPriceSeller.json";
 
 export default function SellTokens() {
-  const [numOfListings, setNumOfListings] = useState(5);
+  const [numOfListings, setNumOfListings] = useState(0);
   const [listings, setListings] = useState([]);
+  const [prices, setPrices] = useState([]);
+  const [amounts, setAmounts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [listedPrice, setListedPrice] = useState(0);
+  const [fixedPriceSellerContract, setFixedPriceSellerContract] = useState(null);
+  const fixedPriceSellerAddress = "0xA9db08709f222861c9818FD6512Af97D61655588";
+  const fixedPriceSellerAbi = abi.abi;
+  const { ethProvider, connectedAccount, cheapATokenContract, loaded } = useWallet();
 
   useEffect(() => {
-    const generateArray = (num) => {
-      return Array.from(new Array(num).map((_) => " "));
+    const initializeFixedPriceSellerContract = async () => {
+      const prov = new ethers.providers.Web3Provider(ethProvider);
+      const tempContract = new ethers.Contract(fixedPriceSellerAddress, fixedPriceSellerAbi, prov.getSigner());
+      setFixedPriceSellerContract(tempContract);
     };
-    numOfListings && setListings(generateArray(numOfListings));
-  }, [numOfListings]);
+
+    loaded && initializeFixedPriceSellerContract();
+  }, [loaded]);
+
+  useEffect(() => {
+    const getListings = async () => {
+      let currentSellers = await fixedPriceSellerContract.getCurrentSellers(cheapATokenContract.address);
+      currentSellers = currentSellers.filter(address => address != ethers.constants.AddressZero);
+      setNumOfListings(currentSellers.length);
+      setListings(currentSellers);
+    };
+
+    const getAmounts = async () => {
+      let tempAmounts = await Promise.all(listings.map(async (address) => {
+        let amount = await cheapATokenContract.balanceOf(address);
+        amount = amount.toNumber();
+        return amount;
+      }));
+      
+      setAmounts(tempAmounts);
+    };
+
+    const getPrices = async () => {
+      let tempPrices = await Promise.all(listings.map(async (address) => {
+        let price = await fixedPriceSellerContract.getPricePerToken(cheapATokenContract.address, address);
+        price = price.toNumber();
+        return price;
+      }));
+
+      setPrices(tempPrices);
+    };
+
+    fixedPriceSellerContract && getListings();
+    fixedPriceSellerContract && getAmounts();
+    fixedPriceSellerContract && getPrices();
+
+  }, [fixedPriceSellerContract, amounts]);
+
+  const handleAddListing = async () => {
+    const addTx = await fixedPriceSellerContract.setPricePerToken(cheapATokenContract.address, listedPrice);
+
+    await addTx.wait();
+
+    console.log(addTx);
+  }
 
   const showMe = () => {
     console.log(numOfListings, listings, listedPrice);
@@ -28,19 +82,19 @@ export default function SellTokens() {
                   <div className="field columns is-multiline">
                     <div className="field column is-three-quarters">
                       <label className="label is-size-5">Address: </label>
-                      <div className="control">Someone's Address</div>
+                      <div className="control">{listing}</div>
                     </div>
                     <div className="field column is-one-quarter">
                       <label className="label is-size-5">Amount: </label>
                       <div className="control">
-                        <div>Someone's amount of tokens</div>
+                        <div>{amounts[i]}</div>
                       </div>
                     </div>
 
                     <div className="field column is-3">
                       <label className="label is-size-5">Price:</label>
                       <div className="control">
-                        Someone's price for the token
+                        {prices[i]}
                       </div>
                     </div>
 
@@ -95,7 +149,7 @@ export default function SellTokens() {
             <button
               className="button is-dark"
               onClick={() => {
-                showMe();
+                handleAddListing();
                 setShowModal(false);
               }}
             >

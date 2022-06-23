@@ -9,6 +9,7 @@ export const WalletContextProvider = ({ children }) => {
   const [ethProvider, setEthProvider] = useState(null);
   const [connectedAccount, setConnectedAccount] = useState(null);
   const [cheapATokenContract, setCheapATokenContract] = useState(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const loadProvider = async () => {
@@ -32,16 +33,17 @@ export const WalletContextProvider = ({ children }) => {
     const getAccount = async () => {
       const accounts = await ethProvider.request({ method: "eth_accounts" });
       setConnectedAccount(accounts[0]);
+
     };
 
     ethProvider && getAccount();
     ethProvider && ethProvider.on("accountsChanged", getAccount);
   }, [ethProvider]);
 
-
+  (ethProvider && connectedAccount && cheapATokenContract && !loaded) && setLoaded(true);
 
   return (
-    <WalletContext.Provider value={{ ethProvider, setEthProvider, connectedAccount, setConnectedAccount, cheapATokenContract }}>
+    <WalletContext.Provider value={{ ethProvider, setEthProvider, connectedAccount, setConnectedAccount, cheapATokenContract, loaded }}>
       {children}
     </WalletContext.Provider>
   );
