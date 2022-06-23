@@ -13,4 +13,8 @@ contract CheapAToken is ERC777 {
     {
         _mint(msg.sender, initialSupply, "", "");
     }
+
+    function decimals() public pure virtual override returns (uint8) {
+        return 1;
+    }
 }
