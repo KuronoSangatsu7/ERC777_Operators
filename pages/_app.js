@@ -3,12 +3,15 @@ import "../styles/globals.css";
 import "./airdrop.css";
 import "./selltokens.css";
 import NavBar from "../components/NavBar";
+import { WalletContextProvider } from "../components/wallet-context";
 
 function MyApp({ Component, pageProps }) {
   return (
     <>
-      <NavBar />
-      <Component {...pageProps} className="all-pages"/>
+      <WalletContextProvider>
+        <NavBar />
+        <Component {...pageProps} className="all-pages" />
+      </WalletContextProvider>
     </>
   );
 }

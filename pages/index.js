@@ -1,37 +1,10 @@
 import { useState, useEffect } from "react";
 import { BigNumber, ethers } from "ethers";
-import detectEthereumProvider from "@metamask/detect-provider";
+import { useWallet } from "../components/wallet-context";
 
 export default function HomePage() {
-  const [ethProvider, setEthProvider] = useState(null);
-  const [connectedAccount, setConnectedAccount] = useState(null);
   const [balance, setBalance] = useState(null);
-
-  useEffect(() => {
-    const loadProvider = async () => {
-      const provider = await detectEthereumProvider();
-      /*const faucetAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-      const faucetAbi = abi.abi;
-      const tempWeb3 = new Web3(provider);
-      const contract = await new tempWeb3.eth.Contract(faucetAbi, faucetAddress);*/
-
-      if (provider) {
-        setEthProvider(provider);
-      }
-    };
-
-    loadProvider();
-  }, []);
-
-  useEffect(() => {
-    const getAccount = async () => {
-      const accounts = await ethProvider.request({ method: "eth_accounts" });
-      setConnectedAccount(accounts[0]);
-    };
-
-    ethProvider && getAccount();
-    ethProvider && ethProvider.on("accountsChanged", getAccount);
-  }, [ethProvider]);
+  const { ethProvider, connectedAccount } = useWallet();
 
   useEffect(() => {
     const loadBalance = async () => {
