@@ -36,17 +36,7 @@ export default function AirDrop() {
   };
 
   const showMe = async () => {
-    const bulkSenderAddress = "0xC3A292FB9192670262ed8f490eeFEF55216c5ae4";
-    const buklSenderAbi = abi.abi;
-    const prov = new ethers.providers.Web3Provider(ethProvider);
-    const bulkSenderContract = new ethers.Contract(bulkSenderAddress, buklSenderAbi, prov.getSigner());
-
-    console.log(sameAmount, cheapATokenContract.address, addresses, sameAmountVal);
-
-    const sendTx = sameAmount ? await bulkSenderContract.send(cheapATokenContract.address, addresses, (sameAmountVal*10).toString(), [])
-    : await bulkSenderContract.sendAmounts(cheapATokenContract.address, addresses, amounts.map(amount => (amount*10).toString()), []);
-
-    console.log(sendTx);
+    
   };
   return (
     <div className="columns is-centered">
