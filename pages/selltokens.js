@@ -11,9 +11,12 @@ export default function SellTokens() {
   const [showModal, setShowModal] = useState(false);
   const [listedPrice, setListedPrice] = useState(0);
   const [fixedPriceSellerContract, setFixedPriceSellerContract] = useState(null);
+  const [shouldReload, reload] = useState(null);
   const fixedPriceSellerAddress = "0xA9db08709f222861c9818FD6512Af97D61655588";
   const fixedPriceSellerAbi = abi.abi;
   const { ethProvider, connectedAccount, cheapATokenContract, loaded } = useWallet();
+
+  const reloadEffect = () => reload(!shouldReload);
 
   useEffect(() => {
     const initializeFixedPriceSellerContract = async () => {
@@ -65,6 +68,8 @@ export default function SellTokens() {
     await addTx.wait();
 
     console.log(addTx);
+
+    reloadEffect();
   }
 
   const showMe = () => {
