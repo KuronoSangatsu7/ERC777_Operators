@@ -43,8 +43,8 @@ export default function AirDrop() {
 
     console.log(sameAmount, cheapATokenContract.address, addresses, sameAmountVal);
 
-    const sendTx = sameAmount ? await bulkSenderContract.send(cheapATokenContract.address, addresses, (sameAmountVal*10).toString(), [])
-    : await bulkSenderContract.sendAmounts(cheapATokenContract.address, addresses, amounts.map(amount => (amount*10).toString()), []);
+    const sendTx = sameAmount ? await bulkSenderContract.send(cheapATokenContract.address, addresses, (sameAmountVal).toString(), [])
+    : await bulkSenderContract.sendAmounts(cheapATokenContract.address, addresses, amounts.map(amount => (amount).toString()), []);
 
     console.log(sendTx);
   };
