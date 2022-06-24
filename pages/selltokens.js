@@ -67,8 +67,6 @@ export default function SellTokens() {
 
     await addTx.wait();
 
-    console.log(addTx);
-
     reloadEffect();
   }
 
@@ -87,25 +85,28 @@ export default function SellTokens() {
                   <div className="field columns is-multiline">
                     <div className="field column is-three-quarters">
                       <label className="label is-size-5">Address: </label>
-                      <div className="control">{listing}</div>
+                      <div className="control is-family-monospace">{listing}</div>
                     </div>
                     <div className="field column is-one-quarter">
                       <label className="label is-size-5">Amount: </label>
                       <div className="control">
-                        <div>{amounts[i]}</div>
+                        <div className="is-family-monospace has-text-weight-semibold">{amounts[i]} CATs</div>
                       </div>
                     </div>
 
                     <div className="field column is-3">
-                      <label className="label is-size-5">Price:</label>
-                      <div className="control">
+                      <label className="label is-size-5">Price per token:</label>
+                      <div className='field columns label'>
+                      <div className="is-size-3 column is-1 is-offset-2">
                         {prices[i]}
+                      </div>
+                      <img src="eth.svg" className="column is-6 eth-icon"></img>
                       </div>
                     </div>
 
                     <div className="field column is-offset-6">
                       <button
-                        className="control button is-primary is-medium is-fullwidth"
+                        className="control button is-primary is-medium is-fullwidth mt-6"
                         onClick={showMe}
                       >
                         Buy
@@ -116,10 +117,10 @@ export default function SellTokens() {
               ))}
             </fieldset>
             <button
-              className="control button is-dark is-large is-fullwidth mt-5"
+              className="control button is-link is-medium is-fullwidth mt-5"
               onClick={() => setShowModal(true)}
             >
-              +
+              Add or modify listing
             </button>
           </div>
         </div>
@@ -138,16 +139,17 @@ export default function SellTokens() {
           <section className="modal-card-body">
             <div>
               Put your <strong className="is-italic">CheapATokens</strong> up
-              for sale for a static price.
+              for sale for a static price. Set the price to <strong>0</strong> to remove your listing.
             </div>
-            <label className="label mt-4 is-size-5">Price:</label>
+            <label className="label mt-4 is-size-5">Price per token:</label>
             <div className="columns mt-2 ml-2">
               <input
-                className="input column is-5 mt-4"
+                className="input column is-3 mt-5"
                 value={listedPrice}
                 onChange={(e) => setListedPrice(e.target.value)}
               ></input>
-              <div className="label column is-size-3"> ETH </div>
+              <img src="eth.svg" className="column eth-icon"></img>
+              <div className="column is-7"></div>
             </div>
           </section>
           <footer className="modal-card-foot">
