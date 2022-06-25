@@ -15,6 +15,7 @@ export default function SellTokens() {
   const [listedPrice, setListedPrice] = useState("");
   const [fixedPriceSellerContract, setFixedPriceSellerContract] = useState(null);
   const [shouldReload, reload] = useState(null);
+  const [buyingFrom, setBuyingFrom] = useState(null);
   const fixedPriceSellerAddress = "0xd71648dc75217f53E3D317c4F53a5cF32200e496";
   const fixedPriceSellerAbi = abi.abi;
   const { ethProvider, connectedAccount, cheapATokenContract, loaded } = useWallet();
@@ -84,7 +85,7 @@ export default function SellTokens() {
 
     const value = ethers.utils.parseUnits(buyPrice);
 
-    const buyTx = await fixedPriceSellerContract.send(cheapATokenContract.address, "0x44d858703db06737170f7f1c485347E53D40c826", {value: value});
+    const buyTx = await fixedPriceSellerContract.send(cheapATokenContract.address, buyingFrom, {value: value});
     
     await buyTx.wait();
 
@@ -126,7 +127,7 @@ export default function SellTokens() {
                     <div className="field column is-offset-6">
                       <button
                         className="control button is-primary is-medium is-fullwidth mt-6"
-                        onClick={() => setShowBuyModal(true)}
+                        onClick={() => {setShowBuyModal(true); setBuyingFrom(listing)}}
                       >
                         Buy
                       </button>
