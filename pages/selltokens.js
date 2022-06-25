@@ -2,21 +2,24 @@ import { useEffect, useState } from "react";
 import { useWallet, WalletContextProvider } from "../components/wallet-context";
 import { ethers } from "ethers";
 import abi from "../utils/contracts/FixedPriceSeller.sol/FixedPriceSeller.json";
+import { parseEther } from "ethers/lib/utils";
 
 export default function SellTokens() {
   const [numOfListings, setNumOfListings] = useState(0);
   const [listings, setListings] = useState([]);
   const [prices, setPrices] = useState([]);
   const [amounts, setAmounts] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [listedPrice, setListedPrice] = useState(0);
+  const [showListModal, setShowListModal] = useState(false);
+  const [showBuyModal, setShowBuyModal] = useState(false);
+  const [buyPrice, setBuyPrice] = useState("");
+  const [listedPrice, setListedPrice] = useState("");
   const [fixedPriceSellerContract, setFixedPriceSellerContract] = useState(null);
   const [shouldReload, reload] = useState(null);
-  const fixedPriceSellerAddress = "0xA9db08709f222861c9818FD6512Af97D61655588";
+  const fixedPriceSellerAddress = "0xd71648dc75217f53E3D317c4F53a5cF32200e496";
   const fixedPriceSellerAbi = abi.abi;
   const { ethProvider, connectedAccount, cheapATokenContract, loaded } = useWallet();
 
-  const reloadEffect = () => reload(!shouldReload);
+  const reloadEffect = () => reload(shouldReload => !shouldReload);
 
   useEffect(() => {
     const initializeFixedPriceSellerContract = async () => {
@@ -35,11 +38,17 @@ export default function SellTokens() {
       setNumOfListings(currentSellers.length);
       setListings(currentSellers);
     };
+    
+    fixedPriceSellerContract && getListings();
+  }, [fixedPriceSellerContract, shouldReload]);
 
+  useEffect(() => {
     const getAmounts = async () => {
       let tempAmounts = await Promise.all(listings.map(async (address) => {
         let amount = await cheapATokenContract.balanceOf(address);
+
         amount = amount.toNumber();
+
         return amount;
       }));
       
@@ -49,29 +58,39 @@ export default function SellTokens() {
     const getPrices = async () => {
       let tempPrices = await Promise.all(listings.map(async (address) => {
         let price = await fixedPriceSellerContract.getPricePerToken(cheapATokenContract.address, address);
-        price = price.toNumber();
+
+        price = ethers.utils.formatEther(price)
+        price = price.toString();
+
         return price;
       }));
 
       setPrices(tempPrices);
     };
 
-    fixedPriceSellerContract && getListings();
-    fixedPriceSellerContract && getAmounts();
-    fixedPriceSellerContract && getPrices();
-
-  }, [fixedPriceSellerContract, amounts]);
+    listings && getAmounts();
+    listings && getPrices();
+  }, [listings]);
 
   const handleAddListing = async () => {
-    const addTx = await fixedPriceSellerContract.setPricePerToken(cheapATokenContract.address, listedPrice);
+    const addTx = await fixedPriceSellerContract.setPricePerToken(cheapATokenContract.address, ethers.utils.parseEther(listedPrice));
 
     await addTx.wait();
 
     reloadEffect();
   }
 
-  const showMe = () => {
-    console.log(numOfListings, listings, listedPrice);
+  const handleBuyTokens = async () => {
+
+    const value = ethers.utils.parseUnits(buyPrice);
+
+    const buyTx = await fixedPriceSellerContract.send(cheapATokenContract.address, "0x44d858703db06737170f7f1c485347E53D40c826", {value: value});
+    
+    await buyTx.wait();
+
+    console.log(buyTx);
+
+    reloadEffect();
   };
 
   return (
@@ -97,7 +116,7 @@ export default function SellTokens() {
                     <div className="field column is-3">
                       <label className="label is-size-5">Price per token:</label>
                       <div className='field columns label'>
-                      <div className="is-size-3 column is-1 is-offset-2">
+                      <div className="is-size-3 column is-offset-2">
                         {prices[i]}
                       </div>
                       <img src="eth.svg" className="column is-6 eth-icon"></img>
@@ -107,7 +126,7 @@ export default function SellTokens() {
                     <div className="field column is-offset-6">
                       <button
                         className="control button is-primary is-medium is-fullwidth mt-6"
-                        onClick={showMe}
+                        onClick={() => setShowBuyModal(true)}
                       >
                         Buy
                       </button>
@@ -118,7 +137,7 @@ export default function SellTokens() {
             </fieldset>
             <button
               className="control button is-link is-medium is-fullwidth mt-5"
-              onClick={() => setShowModal(true)}
+              onClick={() => setShowListModal(true)}
             >
               Add or modify listing
             </button>
@@ -126,14 +145,14 @@ export default function SellTokens() {
         </div>
       </div>
 
-      <div className={"modal " + (showModal ? "is-active" : "")}>
+      <div className={"modal " + (showListModal ? "is-active" : "")}>
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
             <p className="modal-card-title">List CATs</p>
             <button
               className="delete"
-              onClick={() => setShowModal(false)}
+              onClick={() => setShowListModal(false)}
             ></button>
           </header>
           <section className="modal-card-body">
@@ -157,17 +176,61 @@ export default function SellTokens() {
               className="button is-dark"
               onClick={() => {
                 handleAddListing();
-                setShowModal(false);
+                setShowListModal(false);
               }}
             >
               List Tokens
             </button>
-            <button className="button" onClick={() => setShowModal(false)}>
+            <button className="button" onClick={() => setShowListModal(false)}>
               Cancel
             </button>
           </footer>
         </div>
       </div>
+
+      <div className={"modal " + (showBuyModal ? "is-active" : "")}>
+        <div className="modal-background"></div>
+        <div className="modal-card">
+          <header className="modal-card-head">
+            <p className="modal-card-title">Buy CATs</p>
+            <button
+              className="delete"
+              onClick={() => setShowBuyModal(false)}
+            ></button>
+          </header>
+          <section className="modal-card-body">
+            <div>
+              Buy <strong className="is-italic">CheapATokens</strong> from one of the listings.
+               Please send exactly the amount of ETH it takes to buy an integer number of tokens
+            </div>
+            <label className="label mt-4 is-size-5">Value:</label>
+            <div className="columns mt-2 ml-2">
+              <input
+                className="input column is-3 mt-5"
+                value={buyPrice}
+                onChange={(e) => setBuyPrice(e.target.value)}
+              ></input>
+              <img src="eth.svg" className="column eth-icon"></img>
+              <div className="column is-7"></div>
+            </div>
+          </section>
+          <footer className="modal-card-foot">
+            <button
+              className="button is-dark"
+              onClick={() => {
+                handleBuyTokens();
+                setShowBuyModal(false);
+              }}
+            >
+              Buy Tokens
+            </button>
+            <button className="button" onClick={() => setShowBuyModal(false)}>
+              Cancel
+            </button>
+          </footer>
+        </div>
+      </div>
+
     </>
   );
 }

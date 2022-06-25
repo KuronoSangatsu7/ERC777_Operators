@@ -14,7 +14,7 @@ export const WalletContextProvider = ({ children }) => {
   useEffect(() => {
     const loadProvider = async () => {
       const provider = await detectEthereumProvider();
-      const cheapATokenAddress = "0x8c4122f2e86eD7880bC0cF590F1166E30Ef0c5b1";
+      const cheapATokenAddress = "0x53f2eBCe16A22411627D01Ec898514A774A800A7";
       const cheapATokenAbi = abi.abi;
       const prov = new ethers.providers.Web3Provider(provider);
       const tempContract = new ethers.Contract(cheapATokenAddress, cheapATokenAbi, prov.getSigner());

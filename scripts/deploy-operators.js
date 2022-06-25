@@ -8,7 +8,7 @@ async function main() {
   await bulkSender.deployed();
 
   console.log("Bulk Sender has been deployed to address: ", bulkSender.address);
-
+  
   const FixedPriceSeller = await ethers.getContractFactory("FixedPriceSeller");
   const fixedPriceSeller = await FixedPriceSeller.deploy();
 
