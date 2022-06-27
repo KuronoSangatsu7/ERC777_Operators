@@ -50,7 +50,7 @@ export default function SellTokens() {
       setListings(currentSellers);
     };
     
-    fixedPriceSellerContract && getListings();
+    fixedPriceSellerContract && ( currentChain == 5 ) && getListings();
   }, [fixedPriceSellerContract, shouldReload]);
 
   useEffect(() => {
