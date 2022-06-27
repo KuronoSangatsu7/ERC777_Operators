@@ -8,6 +8,7 @@ const WalletContext = createContext({});
 export const WalletContextProvider = ({ children }) => {
   const [ethProvider, setEthProvider] = useState(null);
   const [connectedAccount, setConnectedAccount] = useState(null);
+  const [currentChain, setCurrentChain] = useState(null);
   const [cheapATokenContract, setCheapATokenContract] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -43,14 +44,22 @@ export const WalletContextProvider = ({ children }) => {
 
     };
 
+    const getChain = async () => {
+      const chainId = await ethereum.request({ method: 'eth_chainId' });
+      chainId = ethers.BigNumber.from(chainId).toNumber()
+      setCurrentChain(chainId);
+    };
+
     ethProvider && getAccount();
+    ethProvider && getChain();
     ethProvider && ethProvider.on("accountsChanged", getAccount);
+    ethProvider && ethProvider.on("chainChanged", getChain);
   }, [ethProvider]);
 
   (ethProvider && connectedAccount && cheapATokenContract && !loaded) && setLoaded(true);
 
   return (
-    <WalletContext.Provider value={{ ethProvider, setEthProvider, connectedAccount, setConnectedAccount, cheapATokenContract, loaded }}>
+    <WalletContext.Provider value={{ ethProvider, setEthProvider, connectedAccount, setConnectedAccount, cheapATokenContract, loaded, currentChain }}>
       {children}
     </WalletContext.Provider>
   );

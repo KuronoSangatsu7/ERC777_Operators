@@ -4,7 +4,7 @@ import { useWallet } from "../components/wallet-context";
 
 export default function HomePage() {
   const [balance, setBalance] = useState(null);
-  const { ethProvider, connectedAccount } = useWallet();
+  const { ethProvider, connectedAccount, currentChain } = useWallet();
 
   useEffect(() => {
     const loadBalance = async () => {
@@ -43,6 +43,7 @@ export default function HomePage() {
           Connect MetaMask
         </button>
       )}
+      <div>{currentChain == 5 ? "nais" : "Please connect to Goerli" }</div>
     </>
   );
 }
