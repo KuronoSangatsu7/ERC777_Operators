@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useWallet, WalletContextProvider } from "../components/wallet-context";
 import { ethers } from "ethers";
 import abi from "../utils/contracts/FixedPriceSeller.sol/FixedPriceSeller.json";
-import { parseEther } from "ethers/lib/utils";
+import { useRouter } from "next/router";
 
 export default function SellTokens() {
   const [numOfListings, setNumOfListings] = useState(0);
@@ -18,9 +18,15 @@ export default function SellTokens() {
   const [buyingFrom, setBuyingFrom] = useState(null);
   const fixedPriceSellerAddress = "0xd71648dc75217f53E3D317c4F53a5cF32200e496";
   const fixedPriceSellerAbi = abi.abi;
-  const { ethProvider, connectedAccount, cheapATokenContract, loaded } = useWallet();
+  const { ethProvider, connectedAccount, cheapATokenContract, loaded, currentChain } = useWallet();
 
   const reloadEffect = () => reload(shouldReload => !shouldReload);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    loaded && (currentChain != 5) && router.push("/");
+  }, [currentChain, loaded]);
 
   useEffect(() => {
     const initializeFixedPriceSellerContract = async () => {

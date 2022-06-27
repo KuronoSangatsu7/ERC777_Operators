@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useWallet } from '../components/wallet-context';
 import { ethers } from "ethers";
 import abi from "../utils/contracts/BulkSender.sol/BulkSender.json";
+import { useRouter } from "next/router";
 
 export default function AirDrop() {
   const [numOfAddresses, setNumOfAddresses] = useState(0);
@@ -9,7 +10,13 @@ export default function AirDrop() {
   const [amounts, setAmounts] = useState([]);
   const [sameAmountVal, setSingleAmountval] = useState(0);
   const [sameAmount, setSameAmount] = useState(false);
-  const { ethProvider, connectedAccount, cheapATokenContract } = useWallet();
+  const { ethProvider, connectedAccount, cheapATokenContract, currentChain, loaded } = useWallet();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    loaded && (currentChain != 5) && router.push("/");
+  }, [currentChain, loaded]);
 
   useEffect(() => {
     const generateArray = (num) => {
