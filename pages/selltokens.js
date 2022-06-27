@@ -25,8 +25,12 @@ export default function SellTokens() {
   useEffect(() => {
     const initializeFixedPriceSellerContract = async () => {
       const prov = new ethers.providers.Web3Provider(ethProvider);
-      const tempContract = new ethers.Contract(fixedPriceSellerAddress, fixedPriceSellerAbi, prov.getSigner());
-      setFixedPriceSellerContract(tempContract);
+      try{
+        const tempContract = new ethers.Contract(fixedPriceSellerAddress, fixedPriceSellerAbi, prov.getSigner());
+        setFixedPriceSellerContract(tempContract);
+      } catch (e) {
+        alert("Failed to load operator contract.\n" + e);
+      }
     };
 
     loaded && initializeFixedPriceSellerContract();
@@ -74,9 +78,16 @@ export default function SellTokens() {
   }, [listings]);
 
   const handleAddListing = async () => {
-    const addTx = await fixedPriceSellerContract.setPricePerToken(cheapATokenContract.address, ethers.utils.parseEther(listedPrice));
 
-    await addTx.wait();
+    try {
+      const addTx = await fixedPriceSellerContract.setPricePerToken(cheapATokenContract.address, ethers.utils.parseEther(listedPrice));
+      await addTx.wait();
+      alert("Transaction successful.");
+      console.log(addTx);
+
+    } catch (e) {
+      alert("Transaction failed.\n" + e);
+    }
 
     reloadEffect();
   }
@@ -85,11 +96,15 @@ export default function SellTokens() {
 
     const value = ethers.utils.parseUnits(buyPrice);
 
-    const buyTx = await fixedPriceSellerContract.send(cheapATokenContract.address, buyingFrom, {value: value});
-    
-    await buyTx.wait();
+    try {
+      const buyTx = await fixedPriceSellerContract.send(cheapATokenContract.address, buyingFrom, {value: value});
+      await buyTx.wait();
+      alert("Transaction successful.");
+      console.log(buyTx);
 
-    console.log(buyTx);
+    } catch (e) {
+      alert("Transaction failed.\n" + e);
+    } 
 
     reloadEffect();
   };
@@ -128,6 +143,7 @@ export default function SellTokens() {
                       <button
                         className="control button is-primary is-medium is-fullwidth mt-6"
                         onClick={() => {setShowBuyModal(true); setBuyingFrom(listing)}}
+                        disabled = {amounts[i] ? false : true}
                       >
                         Buy
                       </button>
