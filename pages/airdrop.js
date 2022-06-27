@@ -137,7 +137,7 @@ export default function AirDrop() {
             ))}
             <div className="field">
               <div className="control">
-                <button className="button is-danger is-fullwidth is-medium" onClick={() => handleSend()}>
+                <button className="button is-fullwidth is-medium red-button has-text-white" onClick={() => handleSend()}>
                   Send Tokens
                 </button>
               </div>

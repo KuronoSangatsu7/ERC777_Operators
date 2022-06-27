@@ -28,7 +28,7 @@ export const WalletContextProvider = ({ children }) => {
     const loadTokenContract = async () => {
       const cheapATokenAddress = "0x53f2eBCe16A22411627D01Ec898514A774A800A7";
       const cheapATokenAbi = abi.abi;
-      const prov = new ethers.providers.Web3Provider(ethProvider);
+      const prov = new ethers.providers.Web3Provider(ethProvider, "any");
       const tempContract = new ethers.Contract(cheapATokenAddress, cheapATokenAbi, prov.getSigner());
 
       setCheapATokenContract(tempContract);

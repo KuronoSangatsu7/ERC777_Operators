@@ -25,7 +25,7 @@ export default function NavBar() {
             <>
               <div className="navbar-end">
                 <div className="navbar-item columns is-gapless">
-                  <div className="label column mr-2 has-text-primary">
+                  <div className="label column mr-2 beige-text">
                     Connected Account:
                   </div>
                   <div className="is-family-monospace column has-text-weight-bold">

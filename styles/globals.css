@@ -15,3 +15,22 @@ body {
 #__next {
     width: 100%;
 }
+
+.homepage-main {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.red-button {
+    background-color: #AD343E;
+}
+
+.yellow-button {
+    background-color: #F2AF29;
+}
+
+.beige-text {
+    color: #D1A7A0;
+}

@@ -131,7 +131,7 @@ export default function SellTokens() {
                     <div className="field column is-one-quarter">
                       <label className="label is-size-5">Amount: </label>
                       <div className="control">
-                        <div className="is-family-monospace has-text-weight-semibold">{amounts[i]} CATs</div>
+                        <div className="is-family-monospace has-text-weight-semibold">{amounts[i]} CAT</div>
                       </div>
                     </div>
 
@@ -159,7 +159,7 @@ export default function SellTokens() {
               ))}
             </fieldset>
             <button
-              className="control button is-link is-medium is-fullwidth mt-5"
+              className="control button yellow-button is-medium is-fullwidth mt-5"
               onClick={() => setShowListModal(true)}
             >
               Add or modify listing
