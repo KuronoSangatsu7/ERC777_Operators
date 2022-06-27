@@ -42,7 +42,7 @@ export default function HomePage() {
                 Balance: <strong className="has-text-primary">{balance}</strong> <span className="has-text-primary">CAT</span>
               </div>
               {currentChain != 5 && (
-                <div className="notification is-danger">
+                <div className="notification has-text-white red-button">
                   Please connect to{" "}
                   <a
                     target="_blank"
