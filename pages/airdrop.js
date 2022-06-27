@@ -19,6 +19,12 @@ export default function AirDrop() {
     numOfAddresses && setAmounts(generateArray(numOfAddresses));
   }, [numOfAddresses]);
 
+  const handleNumOfAddressesChange = (e) => {
+    const value = Math.max(0, Math.min(100, Number(e.target.value))); 
+    setNumOfAddresses(value);
+    if (!value) setAddresses([]);
+  };
+
   const handleUserAddressChange = (position) => (e) => {
     setAddresses([
       ...addresses.slice(0, position),
@@ -62,7 +68,7 @@ export default function AirDrop() {
                   min="0"
                   max="50"
                   value={numOfAddresses}
-                  onChange={(e) => setNumOfAddresses(parseInt(e.target.value))}
+                  onChange={(e) => handleNumOfAddressesChange(e)}
                 ></input>
               </div>
             </div>
