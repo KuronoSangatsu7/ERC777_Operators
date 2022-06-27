@@ -56,7 +56,7 @@ export const WalletContextProvider = ({ children }) => {
     ethProvider && ethProvider.on("chainChanged", getChain);
   }, [ethProvider]);
 
-  (ethProvider && connectedAccount && cheapATokenContract && !loaded) && setLoaded(true);
+  (ethProvider && connectedAccount && cheapATokenContract && currentChain && !loaded) && setLoaded(true);
 
   return (
     <WalletContext.Provider value={{ ethProvider, setEthProvider, connectedAccount, setConnectedAccount, cheapATokenContract, loaded, currentChain }}>
