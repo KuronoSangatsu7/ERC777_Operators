@@ -14,12 +14,12 @@ export default function NavBar() {
 
         <div className="navbar-menu">
           <div className="navbar-start">
-            <a className="navbar-item" href="airdrop">
-              Air Drop UI
-            </a>
-            <a className="navbar-item" href="selltokens">
-              Static Price Seller
-            </a>
+            <Link href="airdrop">
+              <a className="navbar-item">Air Drop UI</a>
+            </Link>
+            <Link href="selltokens">
+              <a className="navbar-item">Static Price Seller</a>
+            </Link>
           </div>
           {connectedAccount ? (
             <>
