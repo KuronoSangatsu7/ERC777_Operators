@@ -10,7 +10,7 @@ export default function AirDrop() {
   const [amounts, setAmounts] = useState([]);
   const [sameAmountVal, setSingleAmountval] = useState(0);
   const [sameAmount, setSameAmount] = useState(false);
-  const { ethProvider, connectedAccount, cheapATokenContract, currentChain, loaded } = useWallet();
+  const { ethProvider, cheapATokenContract, currentChain, loaded } = useWallet();
 
   const router = useRouter();
 
@@ -56,21 +56,18 @@ export default function AirDrop() {
     try {
       bulkSenderContract = new ethers.Contract(bulkSenderAddress, buklSenderAbi, prov.getSigner());
     } catch (e) {
-      alert("Failed to load operator contract.\n" + e)
+      alert("Failed to load operator contract.")
     }
-
-    console.log(sameAmount, cheapATokenContract.address, addresses, sameAmountVal);
 
     try {
       const sendTx = sameAmount ? await bulkSenderContract.send(cheapATokenContract.address, addresses, (sameAmountVal).toString(), [])
       : await bulkSenderContract.sendAmounts(cheapATokenContract.address, addresses, amounts.map(amount => (amount).toString()), []); 
-      sendTx.wait();
-      alert("Transaction Successful");
-      console.log(sendTx);
+      await sendTx.wait();
+      alert("Transaction Successful.");
 
     } catch (e) {
 
-      alert("Transaction Failed.\n" + e);
+      alert("Transaction Failed.");
     }
   };
   return (

@@ -5,7 +5,6 @@ import abi from "../utils/contracts/FixedPriceSeller.sol/FixedPriceSeller.json";
 import { useRouter } from "next/router";
 
 export default function SellTokens() {
-  const [numOfListings, setNumOfListings] = useState(0);
   const [listings, setListings] = useState([]);
   const [prices, setPrices] = useState([]);
   const [amounts, setAmounts] = useState([]);
@@ -18,7 +17,7 @@ export default function SellTokens() {
   const [buyingFrom, setBuyingFrom] = useState(null);
   const fixedPriceSellerAddress = "0xd71648dc75217f53E3D317c4F53a5cF32200e496";
   const fixedPriceSellerAbi = abi.abi;
-  const { ethProvider, connectedAccount, cheapATokenContract, loaded, currentChain } = useWallet();
+  const { ethProvider, cheapATokenContract, loaded, currentChain } = useWallet();
 
   const reloadEffect = () => reload(shouldReload => !shouldReload);
 
@@ -35,7 +34,7 @@ export default function SellTokens() {
         const tempContract = new ethers.Contract(fixedPriceSellerAddress, fixedPriceSellerAbi, prov.getSigner());
         setFixedPriceSellerContract(tempContract);
       } catch (e) {
-        alert("Failed to load operator contract.\n" + e);
+        alert("Failed to load operator contract.");
       }
     };
 
@@ -46,7 +45,6 @@ export default function SellTokens() {
     const getListings = async () => {
       let currentSellers = await fixedPriceSellerContract.getCurrentSellers(cheapATokenContract.address);
       currentSellers = currentSellers.filter(address => address != ethers.constants.AddressZero);
-      setNumOfListings(currentSellers.length);
       setListings(currentSellers);
     };
     
@@ -89,10 +87,9 @@ export default function SellTokens() {
       const addTx = await fixedPriceSellerContract.setPricePerToken(cheapATokenContract.address, ethers.utils.parseEther(listedPrice));
       await addTx.wait();
       alert("Transaction successful.");
-      console.log(addTx);
 
     } catch (e) {
-      alert("Transaction failed.\n" + e);
+      alert("Transaction failed.");
     }
 
     reloadEffect();
@@ -106,10 +103,9 @@ export default function SellTokens() {
       const buyTx = await fixedPriceSellerContract.send(cheapATokenContract.address, buyingFrom, {value: value});
       await buyTx.wait();
       alert("Transaction successful.");
-      console.log(buyTx);
 
     } catch (e) {
-      alert("Transaction failed.\n" + e);
+      alert("Transaction failed.");
     } 
 
     reloadEffect();

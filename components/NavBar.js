@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useWallet } from "./wallet-context";
 
 export default function NavBar() {
-  const { connectedAccount, currentChain, loaded } = useWallet();
+  const { connectedAccount } = useWallet();
   return (
     <>
       <nav className="navbar is-fixed-top is-white has-shadow">
