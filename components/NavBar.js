@@ -7,9 +7,11 @@ export default function NavBar() {
     <>
       <nav className="navbar is-fixed-top is-white has-shadow">
         <div className="navbar-brand">
-          <a href="/">
+          <Link href="/">
+          <a>
             <img className="navbar-item" src="mustaš.svg"></img>
           </a>
+          </Link>
         </div>
 
         <div className="navbar-menu">
