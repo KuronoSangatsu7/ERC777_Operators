@@ -48,6 +48,7 @@ export default function HomePage() {
                   Please connect to{" "}
                   <a
                     target="_blank"
+                    rel="noreferrer"
                     href="https://goerli.net/"
                   >
                     Goerli Test Network
@@ -61,6 +62,7 @@ export default function HomePage() {
                 Wallet not detected!{` `}
                 <a
                   target="_blank"
+                  rel="noreferrer"
                   href="https://docs.metamask.io"
                 >
                   Install MetaMask
