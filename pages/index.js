@@ -10,6 +10,7 @@ export default function HomePage() {
     currentChain,
     cheapATokenContract,
     loaded,
+    providerLoaded
   } = useWallet();
 
   useEffect(() => {
@@ -28,6 +29,7 @@ export default function HomePage() {
 
   return (
     <div className="homepage-main is-flex">
+      {providerLoaded? 
       <div className="columns is-multiline">
         <div className="column is-full">
           {connectedAccount ? (
@@ -71,7 +73,8 @@ export default function HomePage() {
             </button>
           )}
         </div>
-      </div>
+      </div>:
+      <div>Loading provider...</div>}
     </div>
   );
 }

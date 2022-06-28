@@ -11,6 +11,7 @@ export const WalletContextProvider = ({ children }) => {
   const [currentChain, setCurrentChain] = useState(null);
   const [cheapATokenContract, setCheapATokenContract] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [providerLoaded, setProviderLoaded] = useState(false);
 
   useEffect(() => {
     const loadProvider = async () => {
@@ -19,6 +20,9 @@ export const WalletContextProvider = ({ children }) => {
       if (provider) {
         setEthProvider(provider);
       }
+
+      setProviderLoaded(true);
+
     };
 
     loadProvider();
@@ -59,7 +63,7 @@ export const WalletContextProvider = ({ children }) => {
   (ethProvider && connectedAccount && cheapATokenContract && currentChain && !loaded) && setLoaded(true);
 
   return (
-    <WalletContext.Provider value={{ ethProvider, setEthProvider, connectedAccount, setConnectedAccount, cheapATokenContract, loaded, currentChain }}>
+    <WalletContext.Provider value={{ ethProvider, setEthProvider, connectedAccount, setConnectedAccount, cheapATokenContract, loaded, currentChain, providerLoaded }}>
       {children}
     </WalletContext.Provider>
   );
