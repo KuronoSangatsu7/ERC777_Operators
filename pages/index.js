@@ -19,7 +19,7 @@ export default function HomePage() {
       temp = temp.toString();
       setBalance(temp);
     };
-    loaded && currentChain == 5 && loadBalance();
+    connectedAccount && loaded && currentChain == 5 && loadBalance();
   }, [connectedAccount, loaded, currentChain]);
 
   const enableEth = async () => {
@@ -66,7 +66,7 @@ export default function HomePage() {
               </div>
             </>
           ) : (
-            <button className="button is-small" onClick={enableEth}>
+            <button className="button is-primary is-medium" onClick={enableEth}>
               Connect MetaMask
             </button>
           )}

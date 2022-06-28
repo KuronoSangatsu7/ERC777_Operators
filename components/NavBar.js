@@ -35,7 +35,11 @@ export default function NavBar() {
               </div>
             </>
           ) : (
-            <></>
+            <div className="navbar-end">
+              <div className="navbar-item">
+                <span className="red-text">Not Connected</span>
+              </div>
+            </div>
           )}
         </div>
       </nav>
