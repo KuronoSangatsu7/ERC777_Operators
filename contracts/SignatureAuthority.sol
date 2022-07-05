@@ -3,22 +3,6 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC777/IERC777.sol";
 
-
-/**
- * @title SignatureAuthority
- *
- *        An ERC777 token operator contract that requires a signature from the
- *        holder to allow the transfer to take place.
- *
- *        State of this contract: stable; development complete but the code is
- *        unaudited. and may contain bugs and/or security holes. Use at your own
- *        risk.
- *
- * @author Jim McDonald
- * @notice If you use this contract please consider donating some Ether or
- *         some of your ERC-777 token to wsl.wealdtech.eth to support continued
- *         development of these and future contracts
- */
 contract SignatureAuthority {
     // Mapping is hash=>used, to stop replays
     mapping(bytes32=>bool) private usedHashes;
